@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#FFE6EF">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="wechat-webview-api-version" content="1.0">
+    <title>给千钰的青春告白 💘</title>
+    <!-- 外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 青春元气手写字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <!-- 轻量粒子库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            /* 自定义工具类 */
+            .font-youth { font-family: 'ZCOOL KuaiLe', cursive; }
+            .text-shadow-soft { text-shadow: 0 1px 4px rgba(255, 174, 201, 0.5); }
+            .bg-gradient-youth { 
+                background: linear-gradient(135deg, #FFE6EF 0%, #E0F7FF 50%, #FFF9E8 100%); 
+            }
+            .perspective-800 { perspective: 800px; }
+            .shadow-soft { box-shadow: 0 8px 24px rgba(255, 159, 185, 0.2); }
+            
+            /* 青春感动画 */
+            .animate-envelope-light { animation: envelopeLight 1.5s ease-out forwards; }
+            .animate-flap-light { animation: flapLight 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+            .animate-paper-slide { animation: paperSlide 1.8s ease-in-out forwards; }
+            .animate-text-pop { animation: textPop 0.4s ease forwards; }
+            .animate-heart-light { animation: heartLight 7s ease-in-out infinite; }
+            .animate-bubble { animation: bubble 4s ease-in-out infinite alternate; }
+
+            /* 动画关键帧（更轻盈灵动） */
+            @keyframes envelopeLight {
+                0% { transform: rotateY(10deg) scale(0.95) opacity(0); }
+                100% { transform: rotateY(0) scale(1) opacity(1); }
+            }
+            @keyframes flapLight {
+                0% { transform: rotateX(0); }
+                100% { transform: rotateX(180deg) translateY(-8px); }
+            }
+            @keyframes paperSlide {
+                0% { transform: translateY(30px) opacity(0); }
+                100% { transform: translateY(0) opacity(1); }
+            }
+            @keyframes textPop {
+                0% { opacity: 0; transform: translateY(8px) scale(0.95); }
+                100% { opacity: 1; transform: translateY(0) scale(1); }
+            }
+            @keyframes heartLight {
+                0% { transform: translateY(-10vh) rotate(0deg) scale(0.9) opacity(0); }
+                15% { opacity: 1; }
+                50% { transform: translateY(40vh) rotate(180deg) scale(1.05); }
+                85% { opacity: 1; }
+                100% { transform: translateY(100vh) rotate(360deg) scale(0.95); opacity(0); }
+            }
+            @keyframes bubble {
+                0% { transform: scale(0.9) translateY(2px); }
+                100% { transform: scale(1.05) translateY(-2px); }
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-youth min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
+    <!-- 轻量粒子背景（小爱心+气泡） -->
+    <div id="particles-js" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- 梦幻气泡装饰 -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute w-4 h-4 bg-white/60 rounded-full animate-bubble" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
+        <div class="absolute w-6 h-6 bg-white/50 rounded-full animate-bubble" style="top: 30%; left: 85%; animation-delay: 0.8s;"></div>
+        <div class="absolute w-3 h-3 bg-white/70 rounded-full animate-bubble" style="top: 70%; left: 30%; animation-delay: 0.4s;"></div>
+        <div class="absolute w-5 h-5 bg-white/40 rounded-full animate-bubble" style="top: 85%; left: 75%; animation-delay: 1.2s;"></div>
+    </div>
+
+    <!-- 青春感信封（简约清新） -->
+    <div class="perspective-800 mb-8 z-10">
+        <div class="envelope relative w-[85vw] max-w-[400px] h-[50vh] max-h-[320px] bg-pink-200 rounded-b-lg shadow-soft cursor-pointer transform transition-all duration-700 hover:shadow-pink-200/40" id="envelope">
+            <!-- 信封蝴蝶结（替代封蜡，更青春） -->
+            <div class="bow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 z-20">
+                <div class="bow-center w-6 h-6 bg-pink-300 rounded-full flex items-center justify-center">
+                    <i class="fa fa-heart text-white text-sm"></i>
+                </div>
+                <div class="bow-left absolute top-1/2 -left-6 w-8 h-4 bg-pink-300 rounded-l-full transform -translate-y-1/2"></div>
+                <div class="bow-right absolute top-1/2 -right-6 w-8 h-4 bg-pink-300 rounded-r-full transform -translate-y-1/2"></div>
+            </div>
+            <!-- 信封盖（轻盈版） -->
+            <div class="envelope-flap absolute top-0 left-0 w-full h-full bg-pink-300 clip-path-polygon(0 0, 50% 50%, 100% 0) transform-origin: top center transition-transform duration-1200 ease-in-out z-10"></div>
+            <!-- 信封侧面（浅色系） -->
+            <div class="envelope-side-l absolute top-0 left-0 w-1/2 h-full bg-pink-100 rounded-l-b-lg"></div>
+            <div class="envelope-side-r absolute top-0 right-0 w-1/2 h-full bg-pink-100 rounded-r-b-lg"></div>
+            
+            <!-- 信纸（清新纹理） -->
+            <div class="paper absolute inset-4 bg-white/95 rounded-b-lg p-6 flex flex-col items-center justify-center opacity-0 transition-all duration-1500 z-0" id="paper">
+                <!-- 浅纹理背景 -->
+                <div class="absolute inset-0 bg-[url('https://picsum.photos/id/237/1000/1000')] opacity-3 mix-blend-multiply rounded-b-lg"></div>
+                
+                <!-- 标题（青春字体+逐字弹出） -->
+                <h1 class="font-youth text-pink-500 text-[clamp(1.8rem,5vw,2.8rem)] mb-4 text-center text-shadow-soft opacity-0" id="title">
+                    郭千钰老婆
+                </h1>
+                
+                <!-- 核心告白（元气弹跳） -->
+                <p class="font-youth text-pink-400 text-[clamp(2.2rem,7vw,3.8rem)] mb-6 text-center animate-bubble text-shadow-soft opacity-0" id="confession">
+                    我爱你 💓
+                </p>
+                
+                <!-- 青春风情话 -->
+                <div class="w-full border-t border-pink-100 pt-4 opacity-0" id="words">
+                    <p class="font-youth text-gray-600 text-[clamp(1rem,3.5vw,1.4rem)] text-center leading-relaxed">
+                        青春里的小幸运，是遇见了你<br>
+                        想和你一起，把日子过成甜甜的汽水<br>
+                        我的满心欢喜，都是关于你呀 ✨
+                    </p>
+                </div>
+                
+                <!-- 青春装饰（小爱心+星星） -->
+                <div class="mt-6 flex gap-3 opacity-0" id="decor">
+                    <i class="fa fa-heart text-pink-400 text-lg animate-bubble" style="animation-delay: 0s;"></i>
+                    <i class="fa fa-star text-yellow-300 text-lg animate-bubble" style="animation-delay: 0.3s;"></i>
+                    <i class="fa fa-heart text-pink-300 text-lg animate-bubble" style="animation-delay: 0.6s;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 青春感提示文字 -->
+    <p class="text-pink-500 text-center mb-2 animate-pulse font-youth text-[clamp(0.9rem,2.5vw,1.2rem)] z-10">
+        戳戳信封，接收我的心动信号 💌
+    </p>
+
+    <!-- 青春浪漫背景音乐（小幸运） -->
+    <audio id="bg-music" loop preload="auto" src="https://music.163.com/song/media/outer/url?id=1307368449.mp3">
+        您的浏览器不支持音频播放
+    </audio>
+
+    <script>
+        // 初始化轻量粒子背景（小爱心+低饱和度）
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 40, density: { enable: true, value_area: 900 } },
+                color: { value: ["#FFC2D1", "#FFB3C6", "#E8E8E8"] },
+                shape: { type: ["heart", "circle"] },
+                opacity: { value: 0.5, random: true },
+                size: { value: 6, random: true },
+                line_linked: { enable: false },
+                move: {
+                    enable: true,
+                    speed: 0.8, // 更慢更轻盈
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: true // 轻微弹跳更青春
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "bubble" }, // 悬浮出气泡
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    bubble: { distance: 120, size: 8, duration: 2, opacity: 0.7 },
+                    push: { particles_nb: 3 }
+                }
+            },
+            retina_detect: true
+        });
+
+        // 核心交互逻辑
+        const envelope = document.getElementById("envelope");
+        const envelopeFlap = document.querySelector(".envelope-flap");
+        const paper = document.getElementById("paper");
+        const title = document.getElementById("title");
+        const confession = document.getElementById("confession");
+        const words = document.getElementById("words");
+        const decor = document.getElementById("decor");
+        const bgMusic = document.getElementById("bg-music");
+
+        // 微信兼容音频播放
+        function playMusic() {
+            try {
+                bgMusic.volume = 0.4; // 更轻柔的音量
+                document.addEventListener("touchstart", () => {
+                    bgMusic.play().catch(err => console.log("音频需点击授权：", err));
+                }, { once: true });
+            } catch (e) {
+                console.log("音频加载失败：", e);
+            }
+        }
+
+        // 逐字弹出文字（青春节奏）
+        function revealText(element, delay = 0) {
+            const text = element.innerText;
+            element.innerText = "";
+            let index = 0;
+            
+            setTimeout(() => {
+                const interval = setInterval(() => {
+                    if (index < text.length) {
+                        element.innerText += text.charAt(index);
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 80); // 更快更元气
+            }, delay);
+        }
+
+        // 信封点击事件（轻盈交互）
+        envelope.addEventListener("click", () => {
+            // 信封盖打开
+            envelopeFlap.classList.add("animate-flap-light");
+            
+            // 信纸滑出
+            setTimeout(() => {
+                paper.classList.add("animate-paper-slide", "opacity-100");
+                
+                // 逐字显示标题
+                title.classList.add("animate-text-pop", "opacity-100");
+                revealText(title, 200);
+                
+                // 显示告白文字
+                setTimeout(() => {
+                    confession.classList.add("animate-text-pop", "opacity-100");
+                    
+                    // 显示情话
+                    setTimeout(() => {
+                        words.classList.add("animate-text-pop", "opacity-100");
+                        
+                        // 显示装饰
+                        setTimeout(() => {
+                            decor.classList.add("animate-text-pop", "opacity-100");
+                        }, 600);
+                    }, 600);
+                }, 600);
+            }, 600);
+
+            // 生成轻盈飘落爱心
+            createLightHearts();
+            
+            // 播放音乐
+            playMusic();
+            
+            // 防止重复点击
+            envelope.style.pointerEvents = "none";
+        });
+
+        // 青春风爱心飘落（更轻盈、马卡龙色）
+        function createLightHearts() {
+            const heartCount = 35;
+            const container = document.body;
+
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement("div");
+                const size = Math.random() * 20 + 8; // 更小更精致
+                const left = Math.random() * 100;
+                const delay = Math.random() * 12;
+                // 马卡龙色系
+                const colors = ["#FFC2D1", "#FFB3C6", "#FFE5EC", "#E0F7FF"];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const rotate = Math.random() * 360;
+
+                heart.style.cssText = `
+                    position: absolute;
+                    left: ${left}%;
+                    top: -10%;
+                    font-size: ${size}px;
+                    color: ${color};
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                    transform: rotate(${rotate}deg);
+                    z-index: 0;
+                    pointer-events: none;
+                `;
+                heart.innerHTML = '<i class="fa fa-heart"></i>';
+                heart.classList.add("animate-heart-light");
+                
+                container.appendChild(heart);
+
+                // 自动清理
+                setTimeout(() => {
+                    heart.remove();
+                }, 7000 + delay * 1000);
+            }
+
+            // 持续生成（更慢更轻柔）
+            const heartInterval = setInterval(() => {
+                for (let i = 0; i < 4; i++) {
+                    const heart = document.createElement("div");
+                    const size = Math.random() * 20 + 8;
+                    const left = Math.random() * 100;
+                    const delay = Math.random() * 6;
+                    const colors = ["#FFC2D1", "#FFB3C6", "#FFE5EC", "#E0F7FF"];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const rotate = Math.random() * 360;
+
+                    heart.style.cssText = `
+                        position: absolute;
+                        left: ${left}%;
+                        top: -10%;
+                        font-size: ${size}px;
+                        color: ${color};
+                        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                        transform: rotate(${rotate}deg);
+                        z-index: 0;
+                        pointer-events: none;
+                    `;
+                    heart.innerHTML = '<i class="fa fa-heart"></i>';
+                    heart.classList.add("animate-heart-light");
+                    
+                    container.appendChild(heart);
+
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 7000 + delay * 1000);
+                }
+            }, 7000);
+
+            // 1.5分钟后停止
+            setTimeout(() => {
+                clearInterval(heartInterval);
+            }, 90000);
+        }
+
+        // 页面加载动画（更轻柔）
+        window.addEventListener("load", () => {
+            envelope.classList.add("animate-envelope-light");
+            bgMusic.load();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</body>
+</html>
