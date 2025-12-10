@@ -57,13 +57,13 @@
         }
 
         /* --- 3. 计分胶囊 --- */
-        .score-container {
-            display: flex;
-            justify-content: center;
-            margin-top: -25px; /* 稍微向上插入标题栏或者贴近 */
-            margin-bottom: 20px;
-            z-index: 11;
-        }
+.score-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px; /* 移除向上偏移，改为正向间距 */
+    margin-bottom: 30px; /* 增加底部间距，避免重叠 */
+    z-index: 11;
+}
 
         .score-pill {
             background: var(--score-bg);
@@ -103,12 +103,12 @@
         }
 
         /* 左右角色图 */
-        .char-img {
-            width: 140px; /* 根据实际图调整 */
-            height: 140px;
-            object-fit: contain;
-            transition: transform 0.1s;
-        }
+.char-img {
+    width: 200px; /* 放大图片宽度 */
+    height: 200px; /* 放大图片高度 */
+    object-fit: contain;
+    transition: transform 0.1s;
+}
 
         /* 被打时的抖动 */
         .shake-vertical {
