@@ -3,217 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>互动小游戏</title>
+    <title>李金容的处罚室</title>
     <style>
-        /* 全局重置与字体 */
+        /* --- 1. 字体与全局 --- */
+        @import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap'); /* 引入一个可爱的快乐体 */
+
+        :root {
+            --header-bg: #E0AAFF; /* 顶部淡紫色 */
+            --score-bg: #C77DFF;  /* 计分深紫色 */
+            --btn-bg: #E0AAFF;    /* 按钮粉紫 */
+            --bg-color: #FFF0F5;  /* 背景极淡粉 */
+            
+            /* 气泡颜色池 */
+            --bubble-blue: #A2D2FF;
+            --bubble-pink: #FFAFCC;
+            --bubble-yellow: #FDE2E4;
+            --bubble-green: #CDB4DB;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent; /* 去除点击高亮 */
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            color: #333;
-        }
-
-        /* 游戏主容器 */
-        .game-container {
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-        }
-
-        /* 标题与统计区域 */
-        .header {
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            color: #555;
-            margin-bottom: 10px;
-        }
-
-        .counter-box {
-            background: #fff;
-            padding: 10px 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            display: inline-block;
-            font-size: 0.9rem;
-            color: #888;
-        }
-
-        .count-number {
-            color: #FF6B6B;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 0 5px;
-        }
-
-        /* 互动主体（角色） */
-        .character-area {
-            position: relative;
-            height: 250px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .character {
-            font-size: 8rem;
-            cursor: pointer;
-            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
 
-        /* 点击时的缩放动画 */
-        .character.active {
-            transform: scale(0.9);
+        body {
+            font-family: 'ZCOOL KuaiLe', 'YouYuan', '幼圆', sans-serif; /* 优先使用圆体 */
+            background-color: var(--bg-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            color: #fff;
         }
 
-        /* 按钮样式 */
-        .action-btn {
-            background: linear-gradient(to right, #FF9A9E, #FECFEF);
-            border: none;
-            padding: 15px 40px;
+        /* --- 2. 顶部通栏标题 (还原参考图) --- */
+        .header-bar {
+            background: var(--header-bg);
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(224, 170, 255, 0.4);
+            z-index: 10;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            letter-spacing: 5px; /* 字间距拉大 */
+            font-weight: normal;
+            text-shadow: 2px 2px 0 rgba(255,255,255,0.3);
+        }
+
+        /* --- 3. 计分胶囊 --- */
+        .score-container {
+            display: flex;
+            justify-content: center;
+            margin-top: -25px; /* 稍微向上插入标题栏或者贴近 */
+            margin-bottom: 20px;
+            z-index: 11;
+        }
+
+        .score-pill {
+            background: var(--score-bg);
+            padding: 8px 30px;
             border-radius: 50px;
-            font-size: 1.2rem;
-            color: white;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .count-num {
+            font-size: 1.4rem;
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
-            cursor: pointer;
+            color: #FFF;
+        }
+
+        /* --- 4. 核心舞台区 (中间插画) --- */
+        .stage-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .characters-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 380px;
+            position: relative;
+        }
+
+        /* 左右角色图 */
+        .char-img {
+            width: 140px; /* 根据实际图调整 */
+            height: 140px;
+            object-fit: contain;
             transition: transform 0.1s;
-            outline: none;
         }
 
-        .action-btn:active {
-            transform: scale(0.95);
+        /* 被打时的抖动 */
+        .shake-vertical {
+            animation: shakeVertical 0.2s ease-in-out;
+        }
+        @keyframes shakeVertical {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(0.95); }
         }
 
-        /* +1 飘字动画效果 */
-        .floating-text {
+        /* 中间的巴掌/工具 (参考图中间那个) */
+        .weapon-box {
             position: absolute;
-            font-size: 1.5rem;
-            color: #FF6B6B;
-            font-weight: bold;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            z-index: 5;
             pointer-events: none;
-            animation: floatUp 0.8s ease-out forwards;
+            opacity: 0.6; /* 默认半透明 */
+            transition: opacity 0.2s;
         }
+        
+        .weapon-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transform-origin: bottom right; /* 旋转中心 */
+        }
+
+        /* 巴掌挥动动画 */
+        .slap-anim {
+            animation: slapAction 0.15s ease-out;
+        }
+        @keyframes slapAction {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(-45deg) scale(1.5); } /* 向左挥动 */
+            100% { transform: rotate(0deg) scale(1); }
+        }
+
+        /* --- 5. 大按钮 --- */
+        .control-area {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            z-index: 20;
+        }
+
+        .hit-btn {
+            background: var(--btn-bg);
+            color: white;
+            border: none;
+            width: 220px;
+            height: 70px;
+            border-radius: 20px;
+            font-size: 1.8rem;
+            font-family: inherit;
+            letter-spacing: 4px;
+            box-shadow: 0 6px 0 #C77DFF, 0 10px 10px rgba(0,0,0,0.1); /* 3D厚度 */
+            transition: all 0.1s;
+            cursor: pointer;
+        }
+
+        .hit-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #C77DFF, 0 2px 2px rgba(0,0,0,0.1);
+        }
+
+        /* --- 6. 底部彩色气泡区 (还原参考图) --- */
+        .bubbles-area {
+            height: 25vh; /* 占据底部 1/4 屏幕 */
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to top, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 100%);
+        }
+
+        /* 气泡样式 */
+        .bubble-pill {
+            position: absolute;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            opacity: 0;
+            animation: floatUp 3s ease-out forwards;
+        }
+
+        /* 几种不同的气泡颜色类 */
+        .b-blue { background: #A2D2FF; } /* 气死老娘了 */
+        .b-pink { background: #FF9A9E; } /* 呜呜呜 */
+        .b-yellow { background: #FFC8DD; } /* 再也不敢了 */
+        .b-green { background: #BDE0FE; } /* 还能咋地 */
 
         @keyframes floatUp {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-80px) scale(1.5);
-            }
+            0% { opacity: 0; transform: translateY(100px) scale(0.5) rotate(0deg); }
+            10% { opacity: 1; transform: translateY(0) scale(1.1) rotate(5deg); }
+            100% { opacity: 0; transform: translateY(-150px) scale(1) rotate(-5deg); }
         }
+
+        /* 预加载 */
+        #preload { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <div class="header">
-            <h1>今日互动统计</h1>
-            <div class="counter-box">
-                今日共计互动 <span class="count-number" id="totalCount">0</span> 次
-            </div>
-        </div>
-
-        <div class="character-area" id="clickArea">
-            <div class="character" id="character">🐱</div>
-        </div>
-
-        <button class="action-btn" id="hitBtn">摸摸头</button>
+    <div class="header-bar">
+        <div class="header-title">李 金 容 的 处 罚 室</div>
     </div>
 
-    <script>
-        // 获取DOM元素
-        const character = document.getElementById('character');
-        const hitBtn = document.getElementById('hitBtn');
-        const clickArea = document.getElementById('clickArea');
-        const totalCountDisplay = document.getElementById('totalCount');
+    <div class="score-container">
+        <div class="score-pill">
+            今日共惩罚李金容: <span class="count-num" id="count">0</span> 次
+        </div>
+    </div>
 
-        // 初始化计数 (可以模拟从后台获取的初始值)
-        let count = 0; 
-
-        // 核心互动函数
-        function performAction(e) {
-            // 1. 数据增加
-            count++;
-            totalCountDisplay.innerText = count;
-
-            // 2. 角色动画
-            character.classList.add('active');
-            setTimeout(() => {
-                character.classList.remove('active');
-            }, 100);
-
-            // 3. 生成漂浮文字 (+1)
-            createFloatingText(e);
-        }
-
-        // 生成漂浮文字的逻辑
-        function createFloatingText(e) {
-            const floatText = document.createElement('div');
-            floatText.classList.add('floating-text');
-            floatText.innerText = '+1'; // 显示的内容
-
-            // 计算显示位置
-            // 如果是按钮点击，位置在角色上方；如果是直接点角色，位置在点击处
-            let x, y;
-            if (e.type === 'click' && e.target === hitBtn) {
-                const rect = character.getBoundingClientRect();
-                x = rect.left + rect.width / 2;
-                y = rect.top;
-            } else if (e.type === 'touchstart' || e.type === 'click') {
-                // 简单处理，统一在角色中心偏上出现，保持整洁
-                const rect = character.getBoundingClientRect();
-                // 生成一个随机微调，让文字不要全叠在一起
-                const randomX = (Math.random() - 0.5) * 40; 
-                x = rect.left + rect.width / 2 + randomX;
-                y = rect.top + 20;
-            }
-
-            floatText.style.left = `${x}px`;
-            floatText.style.top = `${y}px`;
+    <div class="stage-area">
+        <div class="characters-wrapper">
+            <img id="charLeft" class="char-img" src="" alt="Target">
             
-            // 修正定位方式，使其相对于body绝对定位
-            floatText.style.position = 'fixed'; 
-            floatText.style.transform = 'translateX(-50%)';
+            <div class="weapon-box">
+                <div id="weapon" class="weapon-img" style="font-size: 50px; text-align:center;">👋</div>
+            </div>
 
-            document.body.appendChild(floatText);
+            <img id="charRight" class="char-img" src="" alt="Face">
+        </div>
+    </div>
 
-            // 动画结束后移除元素，防止DOM堆积
-            setTimeout(() => {
-                floatText.remove();
-            }, 800);
+    <div class="control-area">
+        <button class="hit-btn" id="btn">打 屁 股</button>
+    </div>
+
+    <div class="bubbles-area" id="bubbleStage">
+        </div>
+
+    <div id="preload"></div>
+
+    <script>
+        // === 配置中心 ===
+        const config = {
+            // 请在此替换您的透明背景 PNG 图片
+            // 建议：Left放屁股图，Right放人脸图，Middle放巴掌图(如果不想用emoji)
+            images: {
+                leftNormal: 'https://via.placeholder.com/200x200/FFC8DD/ffffff?text=Butt+Normal',
+                leftHit:    'https://via.placeholder.com/200x200/FF9A9E/ffffff?text=Butt+Red!', // 打红的屁股
+                
+                rightNormal: 'https://via.placeholder.com/200x200/BDE0FE/ffffff?text=Face+Normal',
+                rightHit:    'https://via.placeholder.com/200x200/A2D2FF/ffffff?text=Face+Cry',   // 哭脸
+            },
+            // 气泡文案与颜色类型 (对应css类: b-blue, b-pink, b-yellow, b-green)
+            bubbles: [
+                { text: "气死老娘了", type: "b-blue" },
+                { text: "再也不敢了", type: "b-yellow" },
+                { text: "呜呜呜", type: "b-pink" },
+                { text: "下次还敢！", type: "b-green" },
+                { text: "用力点！", type: "b-pink" },
+                { text: "屁股开花🌸", type: "b-yellow" },
+                { text: "错了错了", type: "b-blue" }
+            ]
+        };
+
+        // === 逻辑 ===
+        let count = 0;
+        const countEl = document.getElementById('count');
+        const btn = document.getElementById('btn');
+        const charLeft = document.getElementById('charLeft');
+        const charRight = document.getElementById('charRight');
+        const weapon = document.getElementById('weapon');
+        const bubbleStage = document.getElementById('bubbleStage');
+        const preloadDiv = document.getElementById('preload');
+
+        // 初始化
+        function init() {
+            charLeft.src = config.images.leftNormal;
+            charRight.src = config.images.rightNormal;
+            
+            // 预加载
+            const i1 = new Image(); i1.src = config.images.leftHit;
+            const i2 = new Image(); i2.src = config.images.rightHit;
+            preloadDiv.append(i1, i2);
         }
 
-        // 绑定事件
-        hitBtn.addEventListener('click', performAction);
-        
-        // 允许直接点击角色也能触发
-        character.addEventListener('click', performAction);
+        // 点击动作
+        function smite() {
+            // 1. 计数
+            count++;
+            countEl.innerText = count;
 
-        // 防止双击缩放
-        document.addEventListener('dblclick', function(event) {
-            event.preventDefault();
-        }, { passive: false });
+            // 2. 角色变身 & 抖动
+            charLeft.src = config.images.leftHit;
+            charRight.src = config.images.rightHit;
+            charLeft.classList.add('shake-vertical');
+            charRight.classList.add('shake-vertical');
+
+            // 3. 武器挥动
+            weapon.parentElement.style.opacity = '1'; // 显示武器
+            weapon.classList.add('slap-anim');
+
+            // 4. 定时还原
+            setTimeout(() => {
+                charLeft.src = config.images.leftNormal;
+                charRight.src = config.images.rightNormal;
+                charLeft.classList.remove('shake-vertical');
+                charRight.classList.remove('shake-vertical');
+                weapon.classList.remove('slap-anim');
+                weapon.parentElement.style.opacity = '0.6'; // 变淡
+            }, 150); // 动作快一点，更有打击感
+
+            // 5. 生成气泡
+            spawnBubble();
+        }
+
+        // 生成底部飘起的彩色药丸气泡
+        function spawnBubble() {
+            const data = config.bubbles[Math.floor(Math.random() * config.bubbles.length)];
+            const el = document.createElement('div');
+            el.className = `bubble-pill ${data.type}`;
+            el.innerText = data.text;
+
+            // 随机位置 (0% - 80% 宽度)
+            const randomLeft = Math.floor(Math.random() * 80);
+            el.style.left = randomLeft + '%';
+            // 随机大小微调
+            el.style.transform = `scale(${0.8 + Math.random() * 0.4})`;
+            // 随机底层起始位置 (让它们看起来有层次)
+            el.style.bottom = (Math.random() * 50 - 50) + 'px';
+
+            bubbleStage.appendChild(el);
+
+            // 动画结束后移除
+            setTimeout(() => {
+                el.remove();
+            }, 3000);
+        }
+
+        // 绑定事件 (支持点击和触摸)
+        btn.addEventListener('click', smite);
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); smite(); });
+
+        init();
+
     </script>
 </body>
 </html>
