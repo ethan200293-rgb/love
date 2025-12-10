@@ -253,7 +253,14 @@ body {
         </div>
 
     <div id="preload"></div>
-
+    <!-- 弹窗HTML -->
+<div id="popup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 100; justify-content: center; align-items: center;">
+    <div style="background: #FFD6E0; border-radius: 20px; padding: 30px 20px; width: 85%; max-width: 300px; text-align: center; box-shadow: 0 10px 30px rgba(255,169,185,0.5);">
+        <div style="font-size: 1.5rem; color: #E63946; margin-bottom: 20px; font-family: 'ZCOOL KuaiLe', sans-serif;">老婆大人~</div>
+        <div style="font-size: 1.2rem; color: #457B9D; margin-bottom: 25px; line-height: 1.6;">您手打疼了吧，歇一歇再继续呀~ 😘</div>
+        <button id="closePopup" style="background: #FFB6C1; border: none; color: white; padding: 10px 30px; border-radius: 50px; font-size: 1rem; font-family: inherit; cursor: pointer; box-shadow: 0 4px 0 #FF8FA3;">好哒~</button>
+    </div>
+</div>
     <script>
         // === 配置中心 ===
         const config = {
@@ -287,6 +294,10 @@ body {
         const weapon = document.getElementById('weapon');
         const bubbleStage = document.getElementById('bubbleStage');
         const preloadDiv = document.getElementById('preload');
+        // 新增弹窗变量
+const popup = document.getElementById('popup');
+const closePopup = document.getElementById('closePopup');
+let hasShownPopup = false; // 控制只显示一次
 
         // 初始化
         function init() {
@@ -299,35 +310,41 @@ body {
             preloadDiv.append(i1, i2);
         }
 
-        // 点击动作
-        function smite() {
-            // 1. 计数
-            count++;
-            countEl.innerText = count;
+// 点击动作
+function smite() {
+    // 1. 计数
+    count++;
+    countEl.innerText = count;
 
-            // 2. 角色变身 & 抖动
-            charLeft.src = config.images.leftHit;
-            charRight.src = config.images.rightHit;
-            charLeft.classList.add('shake-vertical');
-            charRight.classList.add('shake-vertical');
+    // 新增：20次时显示弹窗
+    if (count === 20 && !hasShownPopup) {
+        popup.style.display = 'flex';
+        hasShownPopup = true; // 避免重复显示
+    }
 
-            // 3. 武器挥动
-            weapon.parentElement.style.opacity = '1'; // 显示武器
-            weapon.classList.add('slap-anim');
+    // 2. 角色变身 & 抖动
+    charLeft.src = config.images.leftHit;
+    charRight.src = config.images.rightHit;
+    charLeft.classList.add('shake-vertical');
+    charRight.classList.add('shake-vertical');
 
-            // 4. 定时还原
-            setTimeout(() => {
-                charLeft.src = config.images.leftNormal;
-                charRight.src = config.images.rightNormal;
-                charLeft.classList.remove('shake-vertical');
-                charRight.classList.remove('shake-vertical');
-                weapon.classList.remove('slap-anim');
-                weapon.parentElement.style.opacity = '0.6'; // 变淡
-            }, 150); // 动作快一点，更有打击感
+    // 3. 武器挥动
+    weapon.parentElement.style.opacity = '1'; // 显示武器
+    weapon.classList.add('slap-anim');
 
-            // 5. 生成气泡
-            spawnBubble();
-        }
+    // 4. 定时还原
+    setTimeout(() => {
+        charLeft.src = config.images.leftNormal;
+        charRight.src = config.images.rightNormal;
+        charLeft.classList.remove('shake-vertical');
+        charRight.classList.remove('shake-vertical');
+        weapon.classList.remove('slap-anim');
+        weapon.parentElement.style.opacity = '0.6'; // 变淡
+    }, 150); // 动作快一点，更有打击感
+
+    // 5. 生成气泡
+    spawnBubble();
+}
 
         // 生成底部飘起的彩色药丸气泡
         function spawnBubble() {
@@ -355,6 +372,10 @@ body {
         // 绑定事件 (支持点击和触摸)
         btn.addEventListener('click', smite);
         btn.addEventListener('touchstart', (e) => { e.preventDefault(); smite(); });
+        // 关闭弹窗事件
+closePopup.addEventListener('click', () => {
+    popup.style.display = 'none';
+});
 
         init();
 
