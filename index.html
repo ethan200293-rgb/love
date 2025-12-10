@@ -29,15 +29,20 @@
             user-select: none;
         }
 
-        body {
-            font-family: 'ZCOOL KuaiLe', 'YouYuan', '幼圆', sans-serif; /* 优先使用圆体 */
-            background-color: var(--bg-color);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            color: #fff;
-        }
+body {
+    font-family: 'ZCOOL KuaiLe', 'YouYuan', '幼圆', sans-serif; /* 优先使用圆体 */
+    background-color: var(--bg-color); /* 保留原背景色作为备用 */
+    background-image: url('你的背景图URL'); /* 替换为你的图片链接（本地路径如 ./images/bg.jpg 或网络链接） */
+    background-size: cover; /* 自适应屏幕 */
+    background-position: center; /* 图片居中 */
+    background-repeat: no-repeat; /* 禁止重复 */
+    background-attachment: fixed; /* 固定背景不滚动 */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #fff;
+}
 
         /* --- 2. 顶部通栏标题 (还原参考图) --- */
         .header-bar {
